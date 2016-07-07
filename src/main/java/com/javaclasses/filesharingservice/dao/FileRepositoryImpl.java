@@ -66,7 +66,7 @@ public class FileRepositoryImpl implements FileRepository{
         }
 
 
-        File file = new File(fileID, name, user);
+        File file = new File(fileID, name, user.getId());
 
         if(log.isInfoEnabled()){
             log.info("Created entity for file {}", name);

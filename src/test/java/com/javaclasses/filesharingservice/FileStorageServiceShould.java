@@ -22,11 +22,8 @@ public class FileStorageServiceShould {
 
     private final FileRepository fileRepository = new FileRepositoryImpl();
     private final FileStorageService fileStorageService = new FileStorageServiceImpl(fileRepository);
-    private final Email email = new Email("makeawish@gmail.com");
-    private final Password password = new Password("followthewhiterabbit");
-    private final FirstName firstName = new FirstName("Alice");
-    private final LastName lastName = new LastName("FromWonderland");
-    private final User user = new User(new UserID(1), email, password, firstName, lastName);
+
+    private final UserID userID = new UserID(1);
 
 
 
@@ -34,7 +31,7 @@ public class FileStorageServiceShould {
     public void uploadFile() throws IOException, NoPermissionException {
 
         final AccessKey key = new AccessKey(1);
-        final File file = new File(new FileID(0), "Hey.txt", user);
+        final File file = new File(new FileID(0), "Hey.txt", userID);
 
         fileStorageService.uploadFile(key, "Hey.txt", new FileInputStream("src/main/resources/Hey.txt"));
 

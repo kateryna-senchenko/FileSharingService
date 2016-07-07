@@ -2,6 +2,7 @@ package com.javaclasses.filesharingservice.dao.entities;
 
 
 import com.javaclasses.filesharingservice.services.customdatatypes.FileID;
+import com.javaclasses.filesharingservice.services.customdatatypes.UserID;
 
 /**
  * Contains file info
@@ -12,10 +13,10 @@ public class File {
 
     private String name;
 
-    private User owner;
+    private UserID owner;
 
 
-    public File(FileID id, String name, User owner){
+    public File(FileID id, String name, UserID owner){
         this.id = id;
         this.name = name;
         this.owner = owner;
@@ -30,7 +31,7 @@ public class File {
         return name;
     }
 
-    public User getOwner() {
+    public UserID getOwner() {
         return owner;
     }
 
@@ -42,7 +43,7 @@ public class File {
         this.name = name;
     }
 
-    public void setOwner(User owner) {
+    public void setOwner(UserID owner) {
         this.owner = owner;
     }
 
