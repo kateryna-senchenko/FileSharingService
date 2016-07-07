@@ -25,7 +25,7 @@ public class FileStorageServiceShould {
     private final FileRepository fileRepository = new FileRepositoryImpl();
     private final FileStorageService fileStorageService = new FileStorageServiceImpl(fileRepository);
 
-    private final UserID userID = new UserID(1);
+    private final UserID userID = new UserID(0);
 
 
 
@@ -62,7 +62,7 @@ public class FileStorageServiceShould {
         final AccessKey key = new AccessKey(1);
 
         final Collection<File> files = new ArrayList<File>() {{
-            add(new File(new FileID(0), "Hey.txt", userID));
+            add(new File(new FileID(0), "Empty.txt", userID));
         }};
 
         assertEquals("Files were not found", files, fileStorageService.browseUsersFiles(key, userID));

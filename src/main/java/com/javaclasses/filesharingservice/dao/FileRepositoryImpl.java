@@ -7,11 +7,14 @@ import com.javaclasses.filesharingservice.dao.entities.User;
 import com.javaclasses.filesharingservice.services.NoPermissionException;
 import com.javaclasses.filesharingservice.services.customdatatypes.AccessKey;
 import com.javaclasses.filesharingservice.services.customdatatypes.FileID;
+import com.javaclasses.filesharingservice.services.customdatatypes.UserID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +31,10 @@ public class FileRepositoryImpl implements FileRepository{
 
     private long count = 0;
 
-    private Map<FileID, File> files = new HashMap<>();
+    private Map<FileID, File> files = new HashMap<FileID, File>(){{
+
+        put(new FileID(count), new File(new FileID(count++), "Empty.txt", new UserID(0)));
+    }};
 
     private Map<FileID, byte[]> contentStorage = new HashMap<>();
 
@@ -82,6 +88,35 @@ public class FileRepositoryImpl implements FileRepository{
         checkNotNull(id, "File id should not be null");
 
         return files.get(id);
+    }
+
+    @Override
+    public Collection<File> browseFiles(AccessKey key, UserID userID) throws NoPermissionException {
+
+        checkNotNull(key, "Access key should not be null");
+        checkNotNull(userID, "User id should not be null");
+
+        if(log.isInfoEnabled()){
+            log.info("Looking for a user with access key {}", key.getAccessKey());
+        }
+
+        User user = userRepository.findActiveUserByAccessKey(key);
+
+        if(user == null || !user.getId().equals(userID)){
+            log.error("User with access key {} does not have a permission to browse the files", key.getAccessKey());
+            throw new NoPermissionException("User does not have a permission to browse the files");
+        }
+
+        Collection<File> userFiles = new ArrayList<>();
+        for(File file: files.values()){
+
+            if(file.getOwner().equals(userID)){
+                userFiles.add(file);
+            }
+
+        }
+        return userFiles;
+
     }
 
 

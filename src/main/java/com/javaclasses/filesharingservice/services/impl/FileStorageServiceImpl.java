@@ -40,6 +40,16 @@ public class FileStorageServiceImpl implements FileStorageService{
 
     @Override
     public Collection<File> browseUsersFiles(AccessKey key, UserID userID) throws NoPermissionException {
-        return null;
+
+        if(log.isInfoEnabled()){
+            log.info("Start browsing files of user with id {}", userID.getUserID());
+        }
+        Collection<File> userFiles = fileRepository.browseFiles(key, userID);
+
+        if(log.isInfoEnabled()){
+            log.info("Formed collection of files for user with id {}", userID.getUserID());
+        }
+
+        return userFiles;
     }
 }
