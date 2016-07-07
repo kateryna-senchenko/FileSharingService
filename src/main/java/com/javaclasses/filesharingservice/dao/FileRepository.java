@@ -23,4 +23,6 @@ public interface FileRepository {
     Collection<File> browseFiles(AccessKey key, UserID userID) throws NoPermissionException;
 
     InputStream downloadFile(AccessKey key, FileID fileID) throws NoPermissionException;
+
+    void deleteFile(AccessKey key, FileID fileID) throws NoPermissionException;
 }

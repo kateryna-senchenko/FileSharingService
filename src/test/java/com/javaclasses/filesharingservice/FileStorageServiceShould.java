@@ -117,6 +117,10 @@ public class FileStorageServiceShould {
         final AccessKey key = new AccessKey(1);
         final FileID id = new FileID(0);
 
+        final File file = new File(id, "Hey.txt", userID);
+
+        assertEquals("File does not exist before removing", file, fileRepository.findFileByID(id));
+        
         fileStorageService.deleteFile(key, id);
 
         assertEquals("File was not deleted", null, fileRepository.findFileByID(id));

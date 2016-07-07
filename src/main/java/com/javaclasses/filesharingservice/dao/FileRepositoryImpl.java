@@ -161,5 +161,30 @@ public class FileRepositoryImpl implements FileRepository{
         return content;
     }
 
+    @Override
+    public void deleteFile(AccessKey key, FileID fileID) throws NoPermissionException {
+
+        checkNotNull(key, "Access key should not be null");
+        checkNotNull(fileID, "File id should not be null");
+
+        if(log.isInfoEnabled()){
+            log.info("Looking for a user with access key {}", key.getAccessKey());
+        }
+
+        User user = userRepository.findActiveUserByAccessKey(key);
+
+        if(user == null || !files.get(fileID).getOwner().equals(user.getId())){
+            log.error("User with access key {} does not have a permission to delete the file", key.getAccessKey());
+            throw new NoPermissionException("User does not have a permission to delete the file");
+        }
+
+        if(log.isInfoEnabled()){
+            log.info("User with access key {} can delete the file", key.getAccessKey());
+        }
+
+        files.remove(fileID);
+        contentStorage.remove(fileID);
+    }
+
 
 }

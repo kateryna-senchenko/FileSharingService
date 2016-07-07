@@ -73,5 +73,15 @@ public class FileStorageServiceImpl implements FileStorageService{
     @Override
     public void deleteFile(AccessKey key, FileID fileID) throws NoPermissionException {
 
+        if(log.isInfoEnabled()){
+            log.info("Start deleting the file with id {}", fileID.getId());
+        }
+
+        fileRepository.deleteFile(key, fileID);
+
+        if(log.isInfoEnabled()){
+            log.info("File {} was deleted", fileID.getId());
+        }
+
     }
 }
