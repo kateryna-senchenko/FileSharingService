@@ -1,6 +1,7 @@
 package com.javaclasses.filesharingservice;
 
 
+import com.google.common.io.ByteStreams;
 import com.javaclasses.filesharingservice.dao.FileRepository;
 import com.javaclasses.filesharingservice.dao.FileRepositoryImpl;
 import com.javaclasses.filesharingservice.dao.entities.File;
@@ -12,11 +13,14 @@ import com.javaclasses.filesharingservice.services.impl.FileStorageServiceImpl;
 import org.junit.Test;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class FileStorageServiceShould {
@@ -78,6 +82,31 @@ public class FileStorageServiceShould {
             fail("Expected NoPermissionException was not thrown");
         } catch (NoPermissionException e){
             assertEquals("User does not have a permission to browse the files", e.getMessage());
+        }
+
+    }
+
+    @Test
+    public void downloadFile() throws NoPermissionException, IOException {
+
+        final AccessKey key = new AccessKey(1);
+
+        InputStream inputStream = fileStorageService.downloadFile(key, new FileID(0));
+
+        assertTrue("File was not downloaded", inputStream != null);
+
+    }
+
+    @Test
+    public void failDownloadFileNoPermission() throws IOException{
+
+        final AccessKey key = new AccessKey(0);
+
+        try{
+            fileStorageService.downloadFile(key, new FileID(0));
+            fail("Expected NoPermissionException was not thrown");
+        } catch (NoPermissionException e){
+            assertEquals("User does not have a permission to download the file", e.getMessage());
         }
 
     }
