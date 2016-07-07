@@ -13,6 +13,8 @@ import org.junit.Test;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -50,6 +52,32 @@ public class FileStorageServiceShould {
             fail("Expected NoPermissionException was not thrown");
         } catch (NoPermissionException e){
             assertEquals("User does not have a permission to upload the file", e.getMessage());
+        }
+
+    }
+
+    @Test
+    public void browseUsersFiles() throws NoPermissionException {
+
+        final AccessKey key = new AccessKey(1);
+
+        final Collection<File> files = new ArrayList<File>() {{
+            add(new File(new FileID(0), "Hey.txt", userID));
+        }};
+
+        assertEquals("Files were not found", files, fileStorageService.browseUsersFiles(key, userID));
+    }
+
+    @Test
+    public void failBrowseFilesNoPermission() throws IOException{
+
+        final AccessKey key = new AccessKey(0);
+
+        try{
+            fileStorageService.browseUsersFiles(key, userID);
+            fail("Expected NoPermissionException was not thrown");
+        } catch (NoPermissionException e){
+            assertEquals("User does not have a permission to browse the files", e.getMessage());
         }
 
     }
