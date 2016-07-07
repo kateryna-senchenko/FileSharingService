@@ -39,7 +39,15 @@ public interface FileStorageService {
      * @param key - access key to verify that user has necessary permission to browse files
      * @param fileID - id of the file to be downloaded
      * @return InputStream of the file content
-     * @throws NoPermissionException if user does not have necessary permission to browse a file
+     * @throws NoPermissionException if user does not have necessary permission to download a file
      */
     InputStream downloadFile(AccessKey key, FileID fileID) throws NoPermissionException;
+
+    /**
+     * Deletes a file
+     * @param key - access key to verify that user has necessary permission to delete the file
+     * @param fileID - id of the file to be deleted
+     * @throws NoPermissionException if user does not have necessary permission to delete a file
+     */
+    void deleteFile(AccessKey key, FileID fileID) throws NoPermissionException;
 }
