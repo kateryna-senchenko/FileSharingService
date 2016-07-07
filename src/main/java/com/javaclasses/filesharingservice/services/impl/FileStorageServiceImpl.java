@@ -6,6 +6,7 @@ import com.javaclasses.filesharingservice.dao.entities.File;
 import com.javaclasses.filesharingservice.services.FileStorageService;
 import com.javaclasses.filesharingservice.services.NoPermissionException;
 import com.javaclasses.filesharingservice.services.customdatatypes.AccessKey;
+import com.javaclasses.filesharingservice.services.customdatatypes.FileID;
 import com.javaclasses.filesharingservice.services.customdatatypes.UserID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,5 +52,10 @@ public class FileStorageServiceImpl implements FileStorageService{
         }
 
         return userFiles;
+    }
+
+    @Override
+    public InputStream downloadFile(AccessKey key, FileID fileID) throws NoPermissionException {
+        return null;
     }
 }
