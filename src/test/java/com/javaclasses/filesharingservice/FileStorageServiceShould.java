@@ -110,4 +110,31 @@ public class FileStorageServiceShould {
         }
 
     }
-}
+
+    @Test
+    public void deleteFile() throws NoPermissionException {
+
+        final AccessKey key = new AccessKey(1);
+        final FileID id = new FileID(0);
+
+        fileStorageService.deleteFile(key, id);
+
+        assertEquals("File was not deleted", null, fileRepository.findFileByID(id));
+
+    }
+
+    @Test
+    public void failDeleteFileNoPermission() throws NoPermissionException {
+
+        final AccessKey key = new AccessKey(0);
+        final FileID id = new FileID(0);
+
+        try {
+            fileStorageService.deleteFile(key, id);
+            fail("Expected NoPermissionException was not thrown");
+        } catch (NoPermissionException e) {
+            assertEquals("User does not have a permission to delete the file", e.getMessage());
+        }
+
+    }
+    }

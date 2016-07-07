@@ -72,6 +72,6 @@ public class FileStorageServiceImpl implements FileStorageService{
 
     @Override
     public void deleteFile(AccessKey key, FileID fileID) throws NoPermissionException {
-        
+
     }
 }
