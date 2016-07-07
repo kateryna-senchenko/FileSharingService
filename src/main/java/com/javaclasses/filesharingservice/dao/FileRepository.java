@@ -21,4 +21,6 @@ public interface FileRepository {
     File findFileByID(FileID id);
 
     Collection<File> browseFiles(AccessKey key, UserID userID) throws NoPermissionException;
+
+    InputStream downloadFile(AccessKey key, FileID fileID) throws NoPermissionException;
 }

@@ -11,6 +11,8 @@ import com.javaclasses.filesharingservice.services.customdatatypes.UserID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -33,10 +35,17 @@ public class FileRepositoryImpl implements FileRepository{
 
     private Map<FileID, File> files = new HashMap<FileID, File>(){{
 
-        put(new FileID(count), new File(new FileID(count++), "Empty.txt", new UserID(0)));
+        put(new FileID(count), new File(new FileID(count), "Empty.txt", new UserID(0)));
     }};
 
-    private Map<FileID, byte[]> contentStorage = new HashMap<>();
+    private Map<FileID, byte[]> contentStorage = new HashMap<FileID, byte[]>(){{
+
+        try {
+            put(new FileID(count++), ByteStreams.toByteArray(new FileInputStream("src/main/resources/Hey.txt")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }};
 
     @Override
     public void uploadFile(AccessKey key, String name, InputStream fileContent) throws NoPermissionException {
@@ -54,6 +63,10 @@ public class FileRepositoryImpl implements FileRepository{
         if(user == null){
             log.error("User with access key {} does not have a permission to upload the file", key.getAccessKey());
             throw new NoPermissionException("User does not have a permission to upload the file");
+        }
+
+        if(log.isInfoEnabled()){
+            log.info("User with access key {} can upload the file", key.getAccessKey());
         }
 
         FileID fileID = new FileID(count++);
@@ -107,6 +120,10 @@ public class FileRepositoryImpl implements FileRepository{
             throw new NoPermissionException("User does not have a permission to browse the files");
         }
 
+        if(log.isInfoEnabled()){
+            log.info("User with access key {} can browse the files", key.getAccessKey());
+        }
+
         Collection<File> userFiles = new ArrayList<>();
         for(File file: files.values()){
 
@@ -117,6 +134,31 @@ public class FileRepositoryImpl implements FileRepository{
         }
         return userFiles;
 
+    }
+
+    @Override
+    public InputStream downloadFile(AccessKey key, FileID fileID) throws NoPermissionException {
+
+        checkNotNull(key, "Access key should not be null");
+        checkNotNull(fileID, "File id should not be null");
+
+        if(log.isInfoEnabled()){
+            log.info("Looking for a user with access key {}", key.getAccessKey());
+        }
+
+        User user = userRepository.findActiveUserByAccessKey(key);
+
+        if(user == null || !files.get(fileID).getOwner().equals(user.getId())){
+            log.error("User with access key {} does not have a permission to download the file", key.getAccessKey());
+            throw new NoPermissionException("User does not have a permission to download the file");
+        }
+
+        if(log.isInfoEnabled()){
+            log.info("User with access key {} can download the file", key.getAccessKey());
+        }
+        InputStream content = new ByteArrayInputStream(contentStorage.get(fileID));
+
+        return content;
     }
 
 

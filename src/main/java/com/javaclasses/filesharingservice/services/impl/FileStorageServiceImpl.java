@@ -56,6 +56,17 @@ public class FileStorageServiceImpl implements FileStorageService{
 
     @Override
     public InputStream downloadFile(AccessKey key, FileID fileID) throws NoPermissionException {
-        return null;
+
+        if(log.isInfoEnabled()){
+            log.info("Start downloading file with id {}", fileID.getId());
+        }
+
+        InputStream inputStream = fileRepository.downloadFile(key, fileID);
+
+        if(log.isInfoEnabled()){
+            log.info("Formed input stream");
+        }
+
+        return inputStream;
     }
 }
