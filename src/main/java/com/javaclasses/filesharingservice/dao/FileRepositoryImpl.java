@@ -6,6 +6,7 @@ import com.javaclasses.filesharingservice.dao.entities.File;
 import com.javaclasses.filesharingservice.dao.entities.User;
 import com.javaclasses.filesharingservice.services.NoPermissionException;
 import com.javaclasses.filesharingservice.services.customdatatypes.AccessKey;
+import com.javaclasses.filesharingservice.services.customdatatypes.FileID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,9 +28,9 @@ public class FileRepositoryImpl implements FileRepository{
 
     private long count = 0;
 
-    private Map<Long, File> files = new HashMap<>();
+    private Map<FileID, File> files = new HashMap<>();
 
-    private Map<Long, byte[]> contentStorage = new HashMap<>();
+    private Map<FileID, byte[]> contentStorage = new HashMap<>();
 
     @Override
     public void uploadFile(AccessKey key, String name, InputStream fileContent) throws NoPermissionException {
@@ -49,12 +50,13 @@ public class FileRepositoryImpl implements FileRepository{
             throw new NoPermissionException("User does not have a permission to upload the file");
         }
 
+        FileID fileID = new FileID(count++);
         try {
             if(log.isDebugEnabled()){
                 log.debug("Start uploading the file {} into byte array", name);
             }
             byte[] content = ByteStreams.toByteArray(fileContent);
-            contentStorage.put(count, content);
+            contentStorage.put(fileID, content);
 
             if(log.isInfoEnabled()){
                 log.info("File {} uploaded and stored in the file storage", name);
@@ -64,7 +66,7 @@ public class FileRepositoryImpl implements FileRepository{
         }
 
 
-        File file = new File(count++, name, user);
+        File file = new File(fileID, name, user);
 
         if(log.isInfoEnabled()){
             log.info("Created entity for file {}", name);
@@ -75,7 +77,7 @@ public class FileRepositoryImpl implements FileRepository{
     }
 
     @Override
-    public File findFileByID(long id) {
+    public File findFileByID(FileID id) {
 
         checkNotNull(id, "File id should not be null");
 

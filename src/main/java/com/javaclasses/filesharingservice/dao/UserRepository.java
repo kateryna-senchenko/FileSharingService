@@ -30,7 +30,7 @@ public interface UserRepository {
      * @param id - user id
      * @return User object with specified id
      */
-    User findUserByID(long id);
+    User findUserByID(UserID id);
 
 
     /**

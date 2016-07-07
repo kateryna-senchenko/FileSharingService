@@ -1,16 +1,15 @@
 package com.javaclasses.filesharingservice.dao.entities;
 
-import com.javaclasses.filesharingservice.services.customdatatypes.Email;
-import com.javaclasses.filesharingservice.services.customdatatypes.FirstName;
-import com.javaclasses.filesharingservice.services.customdatatypes.LastName;
-import com.javaclasses.filesharingservice.services.customdatatypes.Password;
+import com.javaclasses.filesharingservice.services.customdatatypes.*;
+
+import java.util.Collection;
 
 /**
  * Contains user info
  */
 public class User {
 
-    private final long id;
+    private final UserID id;
 
     private Email email;
 
@@ -20,8 +19,9 @@ public class User {
 
     private LastName lastName;
 
+    private Collection<File> usersFiles;
 
-    public User(long id, Email email, Password password, FirstName firstName, LastName lastName) {
+    public User(UserID id, Email email, Password password, FirstName firstName, LastName lastName) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -29,7 +29,7 @@ public class User {
         this.lastName = lastName;
     }
 
-    public long getId() {
+    public UserID getId() {
         return id;
     }
 
@@ -74,14 +74,14 @@ public class User {
 
         User user = (User) o;
 
-        if (id != user.id) return false;
+        if (!id.equals(user.id)) return false;
         return email.equals(user.email);
 
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
+        int result = id.hashCode();
         result = 31 * result + email.hashCode();
         return result;
     }

@@ -1,27 +1,28 @@
 package com.javaclasses.filesharingservice.dao.entities;
 
 
+import com.javaclasses.filesharingservice.services.customdatatypes.FileID;
 
 /**
  * Contains file info
  */
 public class File {
 
-    private long id;
+    private FileID id;
 
     private String name;
 
     private User owner;
 
 
-    public File(long id, String name, User owner){
+    public File(FileID id, String name, User owner){
         this.id = id;
         this.name = name;
         this.owner = owner;
     }
 
 
-    public long getId() {
+    public FileID getId() {
         return id;
     }
 
@@ -33,7 +34,7 @@ public class File {
         return owner;
     }
 
-    public void setId(long id) {
+    public void setId(FileID id) {
         this.id = id;
     }
 
@@ -52,12 +53,12 @@ public class File {
 
         File file = (File) o;
 
-        return id == file.id;
+        return id.equals(file.id);
 
     }
 
     @Override
     public int hashCode() {
-        return (int) (id ^ (id >>> 32));
+        return id.hashCode();
     }
 }

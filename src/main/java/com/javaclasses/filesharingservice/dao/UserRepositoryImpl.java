@@ -25,16 +25,16 @@ public class UserRepositoryImpl implements UserRepository {
 
     private long count = 0;
 
-    private Map<Long, User> users = new HashMap<Long, User>() {{
+    private Map<UserID, User> users = new HashMap<UserID, User>() {{
 
-        put(count, new User(count, new Email("smth@gmail.com"), new Password("mypassword"),
+        put(new UserID(count), new User(new UserID(count), new Email("smth@gmail.com"), new Password("mypassword"),
                 new FirstName("Kolin"), new LastName("Farrel")));
 
 
     }};
 
     private Map<AccessKey, User> activeUsers = new HashMap<AccessKey, User>(){{
-        put(new AccessKey(1),  new User(count++, new Email("smth@gmail.com"), new Password("mypassword"),
+        put(new AccessKey(1),  new User(new UserID(count++), new Email("smth@gmail.com"), new Password("mypassword"),
                 new FirstName("Kolin"), new LastName("Farrel")));
     }};
 
@@ -51,7 +51,7 @@ public class UserRepositoryImpl implements UserRepository {
 
         if(isEmailUnique(getAllEmails(), email)){
 
-            User newUser = new User(count++, email, password, firstName, lastName);
+            User newUser = new User(new UserID(count++), email, password, firstName, lastName);
 
             users.put(newUser.getId(), newUser);
 
@@ -68,7 +68,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User findUserByID(long id){
+    public User findUserByID(UserID id){
 
         checkNotNull(id, "Users id should not be null");
 
@@ -154,7 +154,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     private Set<Email> getAllEmails() {
 
-        Set<Email> emails = new HashSet<Email>();
+        Set<Email> emails = new HashSet<>();
 
         if(!users.isEmpty()){
 

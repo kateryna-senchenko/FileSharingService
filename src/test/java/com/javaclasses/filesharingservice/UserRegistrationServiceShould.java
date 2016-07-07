@@ -2,10 +2,7 @@ package com.javaclasses.filesharingservice;
 
 
 import com.javaclasses.filesharingservice.dao.UserRepository;
-import com.javaclasses.filesharingservice.services.customdatatypes.Email;
-import com.javaclasses.filesharingservice.services.customdatatypes.FirstName;
-import com.javaclasses.filesharingservice.services.customdatatypes.LastName;
-import com.javaclasses.filesharingservice.services.customdatatypes.Password;
+import com.javaclasses.filesharingservice.services.customdatatypes.*;
 import com.javaclasses.filesharingservice.dao.UserRepositoryImpl;
 import com.javaclasses.filesharingservice.dao.entities.User;
 import com.javaclasses.filesharingservice.services.impl.UserRegistrationServiceImpl;
@@ -24,7 +21,7 @@ public class UserRegistrationServiceShould {
     private final Password password = new Password("followthewhiterabbit");
     private final FirstName firstName = new FirstName("Alice");
     private final LastName lastName = new LastName("FromWonderland");
-    private final User user = new User(1, email, password, firstName, lastName);
+    private final User user = new User(new UserID(1), email, password, firstName, lastName);
 
 
     @Test
@@ -32,7 +29,7 @@ public class UserRegistrationServiceShould {
 
         registerService.registerUser(email, password, firstName, lastName);
 
-        assertEquals("New user was not registered", user, userRepository.findUserByID(1));
+        assertEquals("New user was not registered", user, userRepository.findUserByID(new UserID(1)));
 
     }
 
