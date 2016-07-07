@@ -21,8 +21,7 @@ public class User {
     private LastName lastName;
 
 
-
-    public User(long id, Email email, Password password, FirstName firstName, LastName lastName){
+    public User(long id, Email email, Password password, FirstName firstName, LastName lastName) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -75,12 +74,15 @@ public class User {
 
         User user = (User) o;
 
-        return id == user.id;
+        if (id != user.id) return false;
+        return email.equals(user.email);
 
     }
 
     @Override
     public int hashCode() {
-        return (int) (id ^ (id >>> 32));
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + email.hashCode();
+        return result;
     }
 }

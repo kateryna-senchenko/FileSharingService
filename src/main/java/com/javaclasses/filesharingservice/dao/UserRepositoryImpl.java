@@ -27,13 +27,16 @@ public class UserRepositoryImpl implements UserRepository {
 
     private Map<Long, User> users = new HashMap<Long, User>() {{
 
-        put(count, new User(count++, new Email("smth@gmail.com"), new Password("mypassword"),
+        put(count, new User(count, new Email("smth@gmail.com"), new Password("mypassword"),
                 new FirstName("Kolin"), new LastName("Farrel")));
 
 
     }};
 
-    private Map<AccessKey, User> activeUsers = new HashMap<>();
+    private Map<AccessKey, User> activeUsers = new HashMap<AccessKey, User>(){{
+        put(new AccessKey(1),  new User(count++, new Email("smth@gmail.com"), new Password("mypassword"),
+                new FirstName("Kolin"), new LastName("Farrel")));
+    }};
 
     @Override
     public void createUser(Email email, Password password, FirstName firstName, LastName lastName)
@@ -136,6 +139,16 @@ public class UserRepositoryImpl implements UserRepository {
         checkNotNull(user, "User should not be null");
 
         activeUsers.put(key, user);
+    }
+
+    @Override
+    public User findActiveUserByAccessKey(AccessKey key) {
+
+        checkNotNull(key, "Access key should not be null");
+
+        User user = activeUsers.get(key);
+
+        return user;
     }
 
 

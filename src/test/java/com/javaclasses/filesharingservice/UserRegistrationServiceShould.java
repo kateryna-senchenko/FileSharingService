@@ -24,7 +24,7 @@ public class UserRegistrationServiceShould {
     private final Password password = new Password("followthewhiterabbit");
     private final FirstName firstName = new FirstName("Alice");
     private final LastName lastName = new LastName("FromWonderland");
-    private final User user = new User(0, email, password, firstName, lastName);
+    private final User user = new User(1, email, password, firstName, lastName);
 
 
     @Test
@@ -32,7 +32,7 @@ public class UserRegistrationServiceShould {
 
         registerService.registerUser(email, password, firstName, lastName);
 
-        assertEquals("New user was not registered", user, userRepository.findUserByID(0));
+        assertEquals("New user was not registered", user, userRepository.findUserByID(1));
 
     }
 

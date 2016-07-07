@@ -57,4 +57,12 @@ public interface UserRepository {
      * @param user - logged in user
      */
     void addActiveUser(AccessKey key, User user);
+
+
+    /**
+     * Provides access to an active user by access key
+     * @param key - Access key given while signing in
+     * @return - User object with specified access key
+     */
+    User findActiveUserByAccessKey(AccessKey key);
 }
