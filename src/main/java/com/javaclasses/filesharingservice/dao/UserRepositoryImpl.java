@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -23,18 +24,17 @@ public class UserRepositoryImpl implements UserRepository {
 
     private static final Logger log = LoggerFactory.getLogger(UserRepositoryImpl.class);
 
-    private long count = 0;
+    private AtomicLong count = new AtomicLong(0);
 
     private Map<UserID, User> users = new HashMap<UserID, User>() {{
 
-        put(new UserID(count), new User(new UserID(count), new Email("smth@gmail.com"), new Password("mypassword"),
+        put(new UserID(count.get()), new User(new UserID(count.get()), new Email("smth@gmail.com"), new Password("mypassword"),
                 new FirstName("Kolin"), new LastName("Farrel")));
-
 
     }};
 
     private Map<AccessKey, User> activeUsers = new HashMap<AccessKey, User>(){{
-        put(new AccessKey(1),  new User(new UserID(count++), new Email("smth@gmail.com"), new Password("mypassword"),
+        put(new AccessKey(1),  new User(new UserID(count.getAndIncrement()), new Email("smth@gmail.com"), new Password("mypassword"),
                 new FirstName("Kolin"), new LastName("Farrel")));
     }};
 
@@ -51,7 +51,7 @@ public class UserRepositoryImpl implements UserRepository {
 
         if(isEmailUnique(getAllEmails(), email)){
 
-            User newUser = new User(new UserID(count++), email, password, firstName, lastName);
+            User newUser = new User(new UserID(count.getAndIncrement()), email, password, firstName, lastName);
 
             users.put(newUser.getId(), newUser);
 

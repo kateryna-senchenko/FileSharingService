@@ -13,7 +13,6 @@ import com.javaclasses.filesharingservice.services.impl.FileStorageServiceImpl;
 import org.junit.Test;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -31,17 +32,17 @@ public class FileRepositoryImpl implements FileRepository{
 
     private final UserRepository userRepository = new UserRepositoryImpl();
 
-    private long count = 0;
+    private AtomicLong count = new AtomicLong(0);
 
     private Map<FileID, File> files = new HashMap<FileID, File>(){{
 
-        put(new FileID(count), new File(new FileID(count), "Empty.txt", new UserID(0)));
+        put(new FileID(count.get()), new File(new FileID(count.get()), "Empty.txt", new UserID(0)));
     }};
 
     private Map<FileID, byte[]> contentStorage = new HashMap<FileID, byte[]>(){{
 
         try {
-            put(new FileID(count++), ByteStreams.toByteArray(new FileInputStream("src/main/resources/Hey.txt")));
+            put(new FileID(count.getAndIncrement()), ByteStreams.toByteArray(new FileInputStream("src/main/resources/Hey.txt")));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -69,7 +70,7 @@ public class FileRepositoryImpl implements FileRepository{
             log.info("User with access key {} can upload the file", key.getAccessKey());
         }
 
-        FileID fileID = new FileID(count++);
+        FileID fileID = new FileID(count.getAndIncrement());
         try {
             if(log.isDebugEnabled()){
                 log.debug("Start uploading the file {} into byte array", name);
